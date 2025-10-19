@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Gamer Zone - by Ragil</title>
+<style>
+/* 🌑 === GLOBAL STYLE === */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; scroll-behavior: smooth; }
+body {
+  background: #0a0a0a;
+  color: #fff;
+  overflow-x: hidden;
+  transition: background 0.5s, color 0.5s;
+}
+.light-mode { background: #f2f2f2; color: #111; }
+
+/* 🔥 === HEADER === */
+header {
+  background: linear-gradient(90deg, #ff0000, #660000);
+  padding: 20px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  box-shadow: 0 0 15px #ff0000;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  background: #111;
+  padding: 10px;
+}
+nav a {
+  color: #ff4444;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+nav a:hover { color: #fff; text-shadow: 0 0 10px #ff0000; }
+
+/* ⚡ === HERO === */
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+  background: url('https://images.unsplash.com/photo-1606112219348-204d7d8b94ee') center/cover no-repeat;
+  position: relative;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.hero h1 {
+  position: relative;
+  font-size: 48px;
+  z-index: 1;
+  text-shadow: 0 0 15px #ff0000;
+}
+.hero p {
+  position: relative;
+  z-index: 1;
+  font-size: 20px;
+}
+
+/* 🧠 === PROFILE === */
+#profile {
+  padding: 60px 20px;
+  text-align: center;
+}
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  margin: 10px;
+}
+button {
+  background: #ff0000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover { background: #ff4444; box-shadow: 0 0 10px #ff0000; }
+
+/* 🎮 === GAMES SECTION === */
+#games {
+  padding: 60px 20px;
+  background: #111;
+  text-align: center;
+}
+.game-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 30px;
+}
+canvas, .click-box {
+  border: 3px solid #ff0000;
+  box-shadow: 0 0 15px #ff0000;
+  border-radius: 10px;
+}
+.click-box {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: #222;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 🎵 === MUSIC CONTROL === */
+#musicControl { margin-top: 20px; }
+
+/* ☀️ === TOGGLES & BUTTONS === */
+#topBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff0000;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 50%;
+  display: none;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ff0000;
+}
+
+/* 📱 === RESPONSIVE === */
+@media(max-width:768px) {
+  .hero h1 { font-size: 32px; }
+  .game-container { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<header>🔥 GAMER ZONE - WELCOME</header>
+
+<nav>
+  <a href="#profile">Profil</a>
+  <a href="#games">Mini Games</a>
+  <a href="#musicControl">Musik</a>
+</nav>
+
+<section class="hero">
+  <h1>Selamat Datang di Dunia Gaming!</h1>
+  <p>Tempat kamu bermain, beraksi, dan bersantai 🎮</p>
+</section>
+
+<section id="profile">
+  <h2>👤 Profil Gamer</h2>
+  <p>Masukkan nama kamu untuk mulai bermain:</p>
+  <input type="text" id="username" placeholder="Nama gamer kamu">
+  <button onclick="saveName()">Simpan</button>
+  <p id="displayName"></p>
+  <button onclick="toggleMode()">🌗 Ganti Tema</button>
+</section>
+
+<section id="games">
+  <h2>🎮 Mini Games</h2>
+  <div class="game-container">
+    <!-- Game 1: Click Speed -->
+    <div>
+      <h3>⚡ Click Speed Game</h3>
+      <div class="click-box" id="clickBox">Klik Aku!</div>
+      <p>Waktu: <span id="time">5</span> detik</p>
+      <p>Skor: <span id="score">0</span></p>
+      <p>Skor Tertinggi: <span id="highScore">0</span></p>
+      <button onclick="startClickGame()">Mulai</button>
+    </div>
+
+    <!-- Game 2: Snake -->
+    <div>
+      <h3>🐍 Snake Game</h3>
+      <canvas id="snake" width="200" height="200"></canvas>
+      <p>Gunakan panah untuk bermain!</p>
+    </div>
+  </div>
+</section>
+
+<section id="musicControl" style="text-align:center; padding:50px;">
+  <h2>🎵 Musik Latar</h2>
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/06/12/audio_0b4c10e043.mp3?filename=sci-fi-game-loop-146454.mp3" type="audio/mpeg">
+  </audio>
+  <button onclick="toggleMusic()">▶️ / ⏸️</button>
+</section>
+
+<footer style="text-align:center; padding:30px; background:#111;">© 2025 Gamer Zone | Dibuat dengan ❤️ oleh Ragil</footer>
+
+<button id="topBtn" onclick="scrollToTop()">⬆️</button>
+
+<script>
+/* === PROFILE SAVE === */
+function saveName(){
+  const name = document.getElementById("username").value;
+  localStorage.setItem("gamerName", name);
+  document.getElementById("displayName").textContent = "Halo, " + name + "!";
+}
+window.onload = () => {
+  const name = localStorage.getItem("gamerName");
+  if(name) document.getElementById("displayName").textContent = "Halo, " + name + "!";
+};
+
+/* === TOGGLE THEME === */
+function toggleMode(){
+  document.body.classList.toggle("light-mode");
+}
+
+/* === BACK TO TOP === */
+window.onscroll = () => {
+  document.getElementById("topBtn").style.display = window.scrollY > 200 ? "block" : "none";
+};
+function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+/* === CLICK GAME === */
+let score = 0, timeLeft = 5, timer, highScore = localStorage.getItem("highScore") || 0;
+document.getElementById("highScore").textContent = highScore;
+function startClickGame(){
+  score = 0; timeLeft = 5;
+  document.getElementById("score").textContent = score;
+  document.getElementById("time").textContent = timeLeft;
+  clearInterval(timer);
+  timer = setInterval(()=>{
+    timeLeft--;
+    document.getElementById("time").textContent = timeLeft;
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      if(score > highScore){
+        highScore = score;
+        localStorage.setItem("highScore", highScore);
+      }
+      alert("Waktu Habis! Skor kamu: " + score);
+    }
+  }, 1000);
+}
+document.getElementById("clickBox").onclick = () => {
+  if(timeLeft > 0){
+    score++;
+    document.getElementById("score").textContent = score;
+  }
+};
+
+/* === SNAKE GAME === */
+const canvas = document.getElementById("snake");
+const ctx = canvas.getContext("2d");
+const box = 10;
+let snake = [{x:10, y:10}];
+let food = {x:50, y:50};
+let dir;
+document.addEventListener("keydown", direction);
+function direction(event){
+  if(event.keyCode==37 && dir!="RIGHT") dir="LEFT";
+  else if(event.keyCode==38 && dir!="DOWN") dir="UP";
+  else if(event.keyCode==39 && dir!="LEFT") dir="RIGHT";
+  else if(event.keyCode==40 && dir!="UP") dir="DOWN";
+}
+function draw(){
+  ctx.fillStyle="#000";
+  ctx.fillRect(0,0,200,200);
+  for(let i=0;i<snake.length;i++){
+    ctx.fillStyle=(i==0)?"#ff0000":"#ff4444";
+    ctx.fillRect(snake[i].x,snake[i].y,box,box);
+  }
+  ctx.fillStyle="#00ff00";
+  ctx.fillRect(food.x,food.y,box,box);
+
+  let headX=snake[0].x;
+  let headY=snake[0].y;
+  if(dir=="LEFT") headX-=box;
+  if(dir=="UP") headY-=box;
+  if(dir=="RIGHT") headX+=box;
+  if(dir=="DOWN") headY+=box;
+
+  if(headX==food.x && headY==food.y){
+    food={x:Math.floor(Math.random()*20)*10, y:Math.floor(Math.random()*20)*10};
+  } else snake.pop();
+
+  let newHead={x:headX,y:headY};
+  snake.unshift(newHead);
+}
+setInterval(draw,100);
+
+/* === MUSIC === */
+function toggleMusic(){
+  const music=document.getElementById("bgMusic");
+  if(music.paused) music.play(); else music.pause();
+}
+</script>
+
+</body>
+</html>
